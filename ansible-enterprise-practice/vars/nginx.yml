@@ -1,0 +1,13 @@
+nginx_package: nginx
+nginx_service: nginx
+nginx_main_conf: /etc/nginx/nginx.conf
+nginx_conf_file: /etc/nginx/conf.d/www.conf
+nginx_web_root: /code/www
+nginx_listen_port: 80
+nginx_server_name: _
+
+nginx_worker_processes: auto
+nginx_worker_connections: 10240
+nginx_worker_rlimit_nofile: 65535
+nginx_keepalive_timeout: 65
+nginx_client_max_body_size: 50m

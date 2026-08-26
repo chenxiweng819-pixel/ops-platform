@@ -1,0 +1,7 @@
+- name: Restart Nginx Server
+  systemd:
+    name: "{{ nginx_service }}"
+    state: restarted
+
+- name: Reload Sysctl
+  shell: sysctl -p /etc/sysctl.d/99-nginx.conf

@@ -1,0 +1,17 @@
+# deploy-nginx.yml —— 跑通链路版（对 localhost 执行，无需 SSH）
+- name: 本机验证部署链路
+  hosts: localhost
+  connection: local      # 直接在本机执行，不走 SSH
+  gather_facts: false    # 不收集 facts，加快执行
+  vars:
+    app_version: "1.0.0"
+  tasks:
+    - name: 创建部署目录
+      file:
+        path: "/tmp/ops-demo/v{{ app_version }}"
+        state: directory
+
+    - name: 写入版本信息
+      copy:
+        dest: "/tmp/ops-demo/v{{ app_version }}/version.txt"
+        content: "deployed v{{ app_version }}"

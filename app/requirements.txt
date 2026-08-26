@@ -1,0 +1,10 @@
+# Python 依赖（在服务器 venv 里安装）
+fastapi
+uvicorn[standard]
+ansible
+ansible-runner
+
+# 第 3 周任务持久化/队列，届时取消注释
+# sqlalchemy
+# celery[redis]
+# redis

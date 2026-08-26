@@ -1,0 +1,46 @@
+- hosts: all
+  tasks:
+    - name: create www group
+      group:
+        name: www
+        gid: 666
+        state: present
+
+    - name: create www user
+      user:
+        name: www
+        uid: 666
+        group: www
+        shell: /sbin/nologin
+        create_home: false
+        state: present
+
+    - name: install common tools packages
+      yum:
+        name:
+          - vim
+          - wget
+          - curl
+          - lrzsz
+          - tree
+          - net-tools
+          - bash-completion
+          - nfs-utils
+        state: present
+
+    - name: stop firewalld
+      systemd:
+        name: firewalld
+        state: stopped
+        enabled: no
+      ignore_errors: yes
+
+    - name: Disable Selinux
+      lineinfile:
+        path: /etc/selinux/config
+        regexp: '^SELINUX='
+        line: 'SELINUX=disabled'
+
+    - name: Disable Selinux Now
+      shell: setenforce 0
+      ignore_errors: yes

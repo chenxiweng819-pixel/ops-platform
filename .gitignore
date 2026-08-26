@@ -1,0 +1,20 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# 敏感信息（运维项目重点！真实清单/密钥永不提交）
+.env
+*.pem
+*.key
+inventory/*
+!inventory/hosts.example
+!inventory/README.md
+
+# 工作区元数据（agent 记忆，不推 Gitee）
+.workbuddy/
+
+# IDE
+.idea/
+.vscode/

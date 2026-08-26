@@ -1,0 +1,76 @@
+- name: Create Nginx Group
+  group:
+    name: "{{ nginx_group }}"
+    gid: "{{ nginx_gid }}"
+    state:
+
+- name: Create Nginx User
+  user:
+    name: "{{ nginx_user }}"
+    uid: "{{ nginx_uid }}"
+    group: "{{ nginx_group }}"
+    shell: /sbin/nologin
+    create_home: false
+    state: present
+
+- name: Install Nginx Server
+  yum:
+    name: "{{ nginx_package }}"
+    state: present
+
+- name: Create Nginx Web Root
+  file:
+    path: "{{ nginx_web_root }}"
+    state: directory
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_group }}"
+    mode: "0755"
+
+- name: Configure Nginx Main Config
+  template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_main_conf }}"
+    backup: yes
+  notify: Restart Nginx Server
+  
+- name: Configure Nginx Server
+  template:
+    src: www.conf.j2
+    dest: "{{ nginx_conf_file }}"
+    mode: "0644"
+  notify: Restart Nginx Server
+
+- name: Copy Test Index Page
+  copy:
+    src: index.html
+    dest: "{{ nginx_web_root }}/index.html"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_group }}"
+    mode: "0644"
+
+- name: Configure Nginx File Limits
+  copy:
+    content: |
+      {{ nginx_user }} soft nofile 65535
+      {{ nginx_user }} hard nofile 65535
+      root soft nofile 65535
+      root hard nofile 65535
+    dest: /etc/security/limits.d/nginx.conf
+
+- name: Configure Kernel Parameters
+  copy:
+    content: |
+      net.core.somaxconn = 65535
+      net.ipv4.tcp_max_syn_backlog = 65535
+      net.ipv4.ip_local_port_range = 1024 65000
+      net.ipv4.tcp_tw_reuse = 1
+      fs.file-max = 1000000
+    dest: /etc/sysctl.d/99-nginx.conf
+  notify: Reload Sysctl
+
+- name: Start Nginx Server
+  systemd:
+    name: "{{ nginx_service }}"
+    state: started
+    enabled: yes
+

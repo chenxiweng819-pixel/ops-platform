@@ -1,0 +1,6 @@
+keepalived_package: keepalived
+keepalived_service: keepalived
+keepalived_vip: 192.168.234.200
+keepalived_router_id: 51
+keepalived_auth_pass: 123456
+keepalived_check_script: /etc/keepalived/check_nginx.sh

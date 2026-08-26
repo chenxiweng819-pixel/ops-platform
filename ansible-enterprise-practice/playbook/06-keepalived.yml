@@ -1,0 +1,65 @@
+- hosts: ha
+  vars_files:
+    - /root/vars/keepalived.yml
+  tasks:
+    - name: Install Keepalived
+      yum:
+        name: "{{ keepalived_package }}"
+        state: present
+
+    - name: Create Nginx Check Script
+      copy:
+        content: |
+          #!/bin/bash
+          systemctl is-active --quiet nginx
+        dest: "{{ keepalived_check_script }}"
+        mode: "0755"
+
+    - name: Configure Keepalived
+      copy:
+        content: |
+          global_defs {
+              router_id {{ inventory_hostname }}
+          }
+
+          vrrp_script chk_nginx {
+              script "{{ keepalived_check_script }}"
+              interval 2
+              weight -80
+          }
+
+          vrrp_instance VI_1 {
+              state {{ keepalived_state }}
+              interface {{ ansible_default_ipv4.interface }}
+              virtual_router_id {{ keepalived_router_id }}
+              priority {{ keepalived_priority }}
+              advert_int 1
+
+              authentication {
+                  auth_type PASS
+                  auth_pass {{ keepalived_auth_pass }}
+              }
+
+              virtual_ipaddress {
+                  {{ keepalived_vip }}
+              }
+
+              track_script {
+                  chk_nginx
+              }
+          }
+        dest: /etc/keepalived/keepalived.conf
+        mode: "0644"
+      notify: Restart Keepalived
+
+    - name: Start Keepalived
+      systemd:
+        name: "{{ keepalived_service }}"
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart Keepalived
+      systemd:
+        name: "{{ keepalived_service }}"
+        state: restarted

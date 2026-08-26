@@ -1,0 +1,5 @@
+# 主机清单模板（服务器上复制为 hosts 后使用）
+# 跑通链路阶段：只用 localhost（配合 playbook 里的 connection: local，无需 SSH）
+
+[local]
+localhost ansible_connection=local

@@ -1,0 +1,4 @@
+proxy_conf_file: /etc/nginx/conf.d/proxy.conf
+proxy_listen_port: 8080
+proxy_server_name: _
+proxy_backend_url: http://127.0.0.1:80

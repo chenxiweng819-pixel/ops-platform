@@ -1,0 +1,6 @@
+erver_ip: 192.168.234.101
+nfs_share_dir: /data/www
+nfs_mount_dir: /code/www
+nfs_allow_network: 192.168.234.0/24
+nfs_user: www
+nfs_group: www

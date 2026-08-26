@@ -1,0 +1,31 @@
+- hosts: nfs
+  vars_files:
+    - /root/vars/nfs.yml
+  tasks:
+    - name: Install NFS Server
+      yum:
+        name: nfs-utils
+        state: present
+
+    - name: Creat NFS Data Directory
+      file:
+        path: "{{ nfs_share_dir }}"
+        state: directory
+        owner: "{{ nfs_user }}"
+        group: "{{ nfs_group }}"
+        mode: "0755"
+
+    - name: Configer NFS Server
+      copy:
+        content: "{{ nfs_share_dir }} {{ nfs_allow_network }}(rw,sync,all_squash,anonuid=666,anongid666)\n"
+        dest: /etc/exports
+
+    - name: Start NFS Server
+      systemd:
+        name: nfs-server
+        state: started
+        enabled: yes
+
+    - name: Reload NFS Exports
+      shell: exportfs -r
+

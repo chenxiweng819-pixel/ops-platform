@@ -1,0 +1,35 @@
+- hosts: webs
+  vars_files:
+    - /root/vars/nginx.yml
+    - /root/vars/proxy.yml
+  tasks:
+    - name: Configure Nginx Reverse Proxy
+      copy:
+        content: |
+          server {
+              listen {{ proxy_listen_port }};
+              server_name {{ proxy_server_name }};
+
+              location / {
+                  proxy_pass {{ proxy_backend_url }};
+                  proxy_set_header Host ;
+                  proxy_set_header X-Real-IP ;
+                  proxy_set_header X-Forwarded-For ;
+                  proxy_set_header X-Forwarded-Proto ;
+              }
+          }
+        dest: "{{ proxy_conf_file }}"
+        mode: "0644"
+      notify: Restart Nginx Server
+
+    - name: Start Nginx Server
+      systemd:
+        name: "{{ nginx_service }}"
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart Nginx Server
+      systemd:
+        name: "{{ nginx_service }}"
+        state: restarted

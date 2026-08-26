@@ -1,0 +1,23 @@
+- hosts: webs
+  vars_files:
+    - /root/vars/nfs.yml
+  tasks:
+    - name: Install NFS Server
+      yum:
+        name: nfs-server
+        state: present
+
+    - name: Create Nginx Web Root
+      file:
+        path: "{{ nfs_mount_dir }}"
+        state: directory
+        owner: "{{ nfs_user }}"
+        user: "{{ nfs_group }}"
+        mode: "0755"
+
+    - name: Mount NFS Share
+      mount:
+        path: "{{ nfs_mount_dir }}"
+        src: "{{ nfs_server_ip }}:{{ nfs_share_dir }}"
+        fstype: nfs
+        state: mounted

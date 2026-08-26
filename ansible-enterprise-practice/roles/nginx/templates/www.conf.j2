@@ -1,0 +1,11 @@
+erver {
+    listen {{ nginx_listen_port }};
+    server_name {{ nginx_server_name }};
+
+    root {{ nginx_web_root }};
+    index index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
