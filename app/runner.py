@@ -8,6 +8,7 @@ private_data_dir 目录约定（服务器上）：
     /opt/ops/runner/inventory/  放主机清单
 """
 from pathlib import Path
+from typing import Dict, Optional
 
 import ansible_runner
 
@@ -15,7 +16,7 @@ import ansible_runner
 PRIVATE_DATA_DIR = Path("/opt/ops/runner")
 
 
-def run_playbook(playbook: str, extravars: dict[str, str] | None = None) -> dict:
+def run_playbook(playbook: str, extravars: Optional[Dict[str, str]] = None) -> dict:
     """执行指定 playbook，返回 {status, rc, stats}。
 
     Args:
