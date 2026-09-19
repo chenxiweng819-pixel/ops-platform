@@ -5,15 +5,29 @@
 ## 技术栈
 - FastAPI（Web API）+ Pydantic（数据校验）
 - ansible-runner（Ansible Python API）
-- SQLite / SQLAlchemy（任务记录，第 3 周）
-- Celery + Redis（异步任务队列，可选进阶）
+- JSON 文件持久化（部署历史 jobs.json）
 
 ## 功能
 - [x] 项目骨架 / 部署服务 API
-- [x] Playbook 一键触发 API（ansible-runner 接入）
-- [ ] 任务状态查询（job_id）
+- [x] Playbook 一键触发 API（ansible-runner 接入，返回结构化 status / rc / stats）
+- [x] BackgroundTasks 异步执行（响应先返回，后台执行 Playbook）
+- [x] 部署历史持久化（jobs.json，含 job_id / 时间 / 剧本 / 版本 / 状态 / 退出码）
+- [x] job_id 追踪（POST /deploy 返回 job_id，GET /jobs/{job_id} 查询单次部署）
+- [x] 健康检查（GET /status）
+
+## Roadmap
+- [ ] SQLite 任务存储（替代 jobs.json，解决并发写竞态）
 - [ ] JWT 认证
-- [ ] WebSocket 实时日志
+- [ ] WebSocket 实时日志（基于 ansible-runner 事件流）
+- [ ] Celery + Redis 任务队列（任务持久化、失败重试、多 worker）
+
+## 接口一览
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | /deploy | 触发部署，返回 job_id，异步执行 Playbook |
+| GET | /status | 健康检查（runner 目录状态、历史记录数） |
+| GET | /jobs | 部署历史列表 |
+| GET | /jobs/{job_id} | 单次部署详情 |
 
 ## 快速开始（远程 Linux 服务器）
 ```bash
