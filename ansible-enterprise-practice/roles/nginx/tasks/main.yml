@@ -2,7 +2,7 @@
   group:
     name: "{{ nginx_group }}"
     gid: "{{ nginx_gid }}"
-    state:
+    state: present
 
 - name: Create Nginx User
   user:
