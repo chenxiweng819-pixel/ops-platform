@@ -2,9 +2,9 @@
   vars_files:
     - /root/vars/nfs.yml
   tasks:
-    - name: Install NFS Server
+    - name: Install NFS Client
       yum:
-        name: nfs-server
+        name: nfs-utils
         state: present
 
     - name: Create Nginx Web Root
@@ -12,11 +12,11 @@
         path: "{{ nfs_mount_dir }}"
         state: directory
         owner: "{{ nfs_user }}"
-        user: "{{ nfs_group }}"
+        group: "{{ nfs_group }}"
         mode: "0755"
 
     - name: Mount NFS Share
-      mount:
+      ansible.posix.mount:
         path: "{{ nfs_mount_dir }}"
         src: "{{ nfs_server_ip }}:{{ nfs_share_dir }}"
         fstype: nfs
