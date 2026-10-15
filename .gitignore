@@ -12,6 +12,11 @@ inventory/*
 !inventory/hosts.example
 !inventory/README.md
 
+# 运行时数据（部署历史）
+app/jobs.db
+app/jobs.json
+app/*.tmp
+
 # 工作区元数据（agent 记忆，不推 Gitee）
 .workbuddy/
 
