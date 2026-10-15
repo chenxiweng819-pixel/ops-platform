@@ -1,0 +1,4 @@
+# 依赖的 Ansible 集合：ansible-galaxy collection install -r collections/requirements.yml
+# （安装完整的 ansible 包时已自带，只装 ansible-core 时需要执行）
+collections:
+  - name: ansible.posix
