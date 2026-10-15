@@ -11,7 +11,7 @@
 - [x] 项目骨架 / 部署服务 API
 - [x] Playbook 一键触发 API（ansible-runner 接入，返回结构化 status / rc / stats）
 - [x] BackgroundTasks 异步执行（受理即返回 202 + job_id，Playbook 在线程池中执行，不阻塞事件循环）
-- [x] 任务状态全程可查（queued → running → successful / failed / timeout / error；进程被强杀后重启标记为 lost）
+- [x] 任务状态全程可查（queued → starting → running → successful / failed / timeout / error；hosts 一台都没匹配上记为 no_hosts；进程被强杀后重启标记为 lost）
 - [x] 部署历史持久化（SQLite，含 job_id / 时间 / 剧本 / 版本 / 状态 / 退出码 / 按主机统计）
 - [x] 输入白名单（版本号格式校验、剧本白名单），防止 extravars 被 Jinja 渲染导致命令注入
 - [x] 同一目标互斥（同一剧本 + limit 已有任务在执行时返回 409）
